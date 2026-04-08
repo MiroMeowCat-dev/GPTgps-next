@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPTgps</title>
+    <link rel="stylesheet" href="css/prompts.css">
+</head>
+<body>
+<main class="home-shell">
+    <section class="hero">
+        <div class="hero-noise" aria-hidden="true"></div>
+        <header class="hero-bar">
+            <a class="brand" href="prompts.html" aria-label="GPTgps 首页">
+                <span class="brand-mark">GPTgps</span>
+                <span class="brand-note">AI chat navigator</span>
+            </a>
+            <nav class="hero-nav" aria-label="主要导航">
+                <a href="explorer.html">历史归档</a>
+                <a href="storage.html">导入导出</a>
+                <a href="settings.html">设置</a>
+                <a href="faq.html">帮助</a>
+            </nav>
+        </header>
+
+        <div class="hero-main">
+            <div class="hero-copy reveal reveal-1">
+                <p class="eyebrow">Long-chat wayfinding for ChatGPT, Gemini, Qwen, Doubao, Claude</p>
+                <h1>把长对话重新变成可导航的工作台。</h1>
+                <p class="hero-text">
+                    GPTgps 不是提示词仓库，而是你在超长 AI 会话里的导航层。
+                    现在的主线能力是分段、标记、跳转、Pin、Note 和 AI 摘要，让复杂对话真正可回溯、可整理、可继续推进。
+                </p>
+                <div class="hero-actions">
+                    <a class="button button-primary" href="https://chatgpt.com/" target="_blank" rel="noreferrer">开始使用</a>
+                    <a class="button button-secondary" href="explorer.html">查看历史归档</a>
+                </div>
+                <ul class="site-strip" aria-label="支持的平台">
+                    <li>ChatGPT</li>
+                    <li>Gemini</li>
+                    <li>Qwen</li>
+                    <li>Doubao</li>
+                    <li>Claude</li>
+                </ul>
+            </div>
+
+            <div class="hero-rail reveal reveal-2">
+                <div class="rail-label">本地状态</div>
+                <dl class="status-list">
+                    <div>
+                        <dt>导航会话</dt>
+                        <dd data-stat="nav-sessions">0</dd>
+                    </div>
+                    <div>
+                        <dt>历史线程</dt>
+                        <dd data-stat="thread-count">0</dd>
+                    </div>
+                    <div>
+                        <dt>已收藏线程</dt>
+                        <dd data-stat="bookmark-count">0</dd>
+                    </div>
+                    <div>
+                        <dt>AI 摘要配置</dt>
+                        <dd data-stat="ai-status">未启用</dd>
+                    </div>
+                </dl>
+                <p class="rail-footnote" data-stat="history-note">历史归档尚未同步，首次使用时会逐步建立本地索引。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-flow">
+        <div class="section-heading reveal reveal-2">
+            <p class="section-kicker">核心能力</p>
+            <h2>这页现在只保留和 GPTgps 主线有关的事情。</h2>
+        </div>
+        <div class="flow-list">
+            <article class="flow-item reveal reveal-1">
+                <span class="flow-index">01</span>
+                <div>
+                    <h3>在聊天页里分段和标记</h3>
+                    <p>把一个超长任务拆成清晰 segment，在关键位置留下 mark、pin 和 note，而不是靠滚动记忆。</p>
+                </div>
+            </article>
+            <article class="flow-item reveal reveal-2">
+                <span class="flow-index">02</span>
+                <div>
+                    <h3>回到任何一段上下文</h3>
+                    <p>从侧栏搜索、跳转、定位 prompt，快速回到之前的任务分支，而不是重新读完整条对话。</p>
+                </div>
+            </article>
+            <article class="flow-item reveal reveal-3">
+                <span class="flow-index">03</span>
+                <div>
+                    <h3>用 AI 摘要压缩复杂会话</h3>
+                    <p>对 segment 和条目生成简洁摘要，让长会话变成可扫描的索引，而不是一整面墙的消息。</p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="section section-actions">
+        <div class="section-heading reveal reveal-2">
+            <p class="section-kicker">工作区入口</p>
+            <h2>从这里进入真正还值得保留的模块。</h2>
+        </div>
+        <div class="action-grid">
+            <a class="action-link reveal reveal-1" href="explorer.html">
+                <span class="action-name">历史归档</span>
+                <span class="action-copy">查看本地线程、搜索旧会话、继续浏览分支历史。</span>
+            </a>
+            <a class="action-link reveal reveal-2" href="storage.html">
+                <span class="action-name">导入导出</span>
+                <span class="action-copy">保留本地备份与迁移能力，管理归档和清理操作。</span>
+            </a>
+            <a class="action-link reveal reveal-3" href="settings.html">
+                <span class="action-name">设置</span>
+                <span class="action-copy">调整语言和保留中的基础偏好，后续会继续精简。</span>
+            </a>
+            <a class="action-link reveal reveal-4" href="faq.html">
+                <span class="action-name">帮助与说明</span>
+                <span class="action-copy">查看当前项目说明、已知情况和后续整理进度。</span>
+            </a>
+        </div>
+    </section>
+
+    <section class="section section-quickstart">
+        <div class="section-heading reveal reveal-2">
+            <p class="section-kicker">快速开始</p>
+            <h2>三步进入新的 GPTgps 工作流。</h2>
+        </div>
+        <ol class="quickstart-list">
+            <li class="reveal reveal-1">
+                <strong>打开一个支持的平台。</strong>
+                在 ChatGPT、Gemini、Qwen、Doubao 或 Claude 中进入具体会话。
+            </li>
+            <li class="reveal reveal-2">
+                <strong>展开 GPTgps 侧栏。</strong>
+                用分段、标记、搜索和跳转整理正在进行的长任务。
+            </li>
+            <li class="reveal reveal-3">
+                <strong>需要回顾时，再回到这里。</strong>
+                用历史归档和导入导出做整理，而不是把首页当成提示词仓库。
+            </li>
+        </ol>
+    </section>
+
+</main>
+<script src="js/prompts.js"></script>
+</body>
+</html>

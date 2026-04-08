@@ -1,0 +1,11 @@
+GPTgps 是一個面向長對話場景的 AI 聊天導航擴充。
+
+- 按 prompt 分段整理長對話
+- 搜尋、標記、Pin、Note，並快速跳轉到關鍵位置
+- 本地保存歷史歸檔，方便回看和繼續使用
+- 基於已保存上下文生成 AI 摘要
+
+絕大多數資料保存在瀏覽器本地儲存中。GPTgps 不自建會話內容儲存伺服器。
+
+專案地址：
+https://github.com/MiroMeowCat-dev/GPTgps

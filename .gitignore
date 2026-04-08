@@ -1,0 +1,6 @@
+/.idea/**
+dist_mv2/
+dist_mv3/
+releases/
+/src/manifest.json
+.DS_Store

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="settings_page_title">GPTgps Settings</title>
+    <link href="https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro-v6@44659d9/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/settings.css">
+</head>
+<body data-page-theme-provider="openai">
+<div id="cover"></div>
+
+<main class="settings-shell">
+    <section class="settings-hero">
+        <header class="settings-topbar">
+            <a class="settings-brand" href="prompts.html">
+                <span class="settings-brand-mark">GPTgps</span>
+                <span class="settings-brand-note" data-i18n="settings_brand_note">control center</span>
+            </a>
+
+            <div class="settings-actions">
+                <a class="chrome-button chrome-button-ghost" href="#theme-setting" data-i18n="settings_theme_entry">Theme Style</a>
+                <a class="chrome-button chrome-button-ghost" href="explorer.html" data-i18n="history">History</a>
+                <a class="chrome-button chrome-button-ghost" href="storage.html" data-i18n="storage">Storage</a>
+                <a class="chrome-button chrome-button-ghost" href="faq.html" data-i18n="faq">FAQ</a>
+            </div>
+        </header>
+
+        <div class="settings-copy">
+            <p class="eyebrow" data-i18n="settings_hero_eyebrow">Control Center</p>
+            <h1 data-i18n="settings_hero_title">Manage language, page style, local archive, and export access in one place.</h1>
+            <p class="settings-text" data-i18n="settings_hero_text">
+                These controls shape how GPTgps feels when you open the extension and how much local conversation context stays ready for reuse.
+            </p>
+
+            <div class="hero-meta" aria-label="Current state">
+                <div class="status-chip">
+                    <span class="status-chip-label" data-i18n="settings_theme_status_label">Theme</span>
+                    <strong id="themeStatusText">ChatGPT</strong>
+                </div>
+                <div class="status-chip">
+                    <span class="status-chip-label" data-i18n="settings_language_status_label">Language</span>
+                    <strong id="languageStatusText">English</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="settings-panel settings-panel-workspace">
+        <header class="panel-head">
+            <p class="section-kicker" data-i18n="settings_group_workspace">Workspace</p>
+            <h2 data-i18n="settings_group_workspace_title">Set the language and visual mood of the extension pages.</h2>
+            <p class="panel-text" data-i18n="settings_group_workspace_text">
+                The theme can follow the AI tab you are currently using, or stay locked to one provider style.
+            </p>
+        </header>
+
+        <div class="settings-list">
+            <div class="setting-row" id="language-setting">
+                <div class="setting-copy-block">
+                    <p class="setting-label" data-i18n="settings_language_title">Interface language</p>
+                    <p class="setting-note" data-i18n="settings_language_text">Change the language used on the settings page. The page refreshes after switching.</p>
+                </div>
+
+                <div class="setting-control">
+                    <div class="picker" id="languagePicker">
+                        <button
+                            class="picker-trigger"
+                            id="languagePickerButton"
+                            type="button"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                            aria-controls="languagePickerMenu"
+                        >
+                            <span class="picker-copy">
+                                <span class="picker-kicker" data-i18n="settings_language_current">Current language</span>
+                                <span class="picker-value" id="languagePickerValue">English</span>
+                            </span>
+                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+
+                        <div class="picker-menu" id="languagePickerMenu" role="listbox" hidden>
+                            <button class="picker-option" type="button" role="option" data-picker="language" data-value="en">
+                                <span data-i18n="settings_language_option_en">English</span>
+                            </button>
+                            <button class="picker-option" type="button" role="option" data-picker="language" data-value="zh_CN">
+                                <span data-i18n="settings_language_option_zh_cn">简体中文</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="setting-row" id="theme-setting">
+                <div class="setting-copy-block">
+                    <p class="setting-label" data-i18n="settings_theme_title">Page theme</p>
+                    <p class="setting-note" data-i18n="settings_theme_text">Follow the current AI site automatically, or lock the extension pages to one provider style.</p>
+                </div>
+
+                <div class="setting-control">
+                    <div class="picker" id="themePicker">
+                        <button
+                            class="picker-trigger"
+                            id="themePickerButton"
+                            type="button"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                            aria-controls="themePickerMenu"
+                        >
+                            <span class="picker-copy">
+                                <span class="picker-kicker" data-i18n="settings_theme_current">Current theme</span>
+                                <span class="picker-value" id="themePickerValue">Auto</span>
+                            </span>
+                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+
+                        <div class="picker-menu" id="themePickerMenu" role="listbox" hidden>
+                            <button class="picker-option" type="button" role="option" data-picker="theme" data-mode="auto" data-provider="openai">
+                                <span data-i18n="settings_theme_option_auto">Auto follow current AI</span>
+                            </button>
+                            <button class="picker-option" type="button" role="option" data-picker="theme" data-mode="locked" data-provider="openai">
+                                <span data-i18n="settings_theme_option_openai">Lock to ChatGPT</span>
+                            </button>
+                            <button class="picker-option" type="button" role="option" data-picker="theme" data-mode="locked" data-provider="claude">
+                                <span data-i18n="settings_theme_option_claude">Lock to Claude</span>
+                            </button>
+                            <button class="picker-option" type="button" role="option" data-picker="theme" data-mode="locked" data-provider="qwen">
+                                <span data-i18n="settings_theme_option_qwen">Lock to Qwen</span>
+                            </button>
+                            <button class="picker-option" type="button" role="option" data-picker="theme" data-mode="locked" data-provider="gemini">
+                                <span data-i18n="settings_theme_option_gemini">Lock to Gemini</span>
+                            </button>
+                            <button class="picker-option" type="button" role="option" data-picker="theme" data-mode="locked" data-provider="doubao">
+                                <span data-i18n="settings_theme_option_doubao">Lock to Doubao</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <p class="control-hint" id="themeControlHint" data-i18n="settings_theme_hint_auto">Following the currently active AI tab.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="settings-panel">
+        <header class="panel-head">
+            <p class="section-kicker" data-i18n="settings_group_archive">Archive</p>
+            <h2 data-i18n="settings_group_archive_title">Choose how much local history GPTgps keeps and surfaces.</h2>
+            <p class="panel-text" data-i18n="settings_group_archive_text">
+                These options only change your local archive and extension controls. They do not remove the original chat from the AI site.
+            </p>
+        </header>
+
+        <div class="settings-list">
+            <div class="setting-row">
+                <div class="setting-copy-block">
+                    <p class="setting-label" data-i18n="settings_history_title">Local archive</p>
+                    <p class="setting-note" data-i18n="settings_history_text">Turn off local saving if you want GPTgps to stop storing new threads on this browser.</p>
+                </div>
+
+                <label class="toggle-control" for="disable-history">
+                    <span class="sr-only" data-i18n="settings_history_toggle">Stop saving new local history</span>
+                    <input class="setting-toggle" type="checkbox" id="disable-history">
+                </label>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-copy-block">
+                    <p class="setting-label" data-i18n="settings_auto_delete_title">Automatic cleanup</p>
+                    <p class="setting-note" data-i18n="settings_auto_delete_text">Delete local threads older than 30 days if they are not bookmarked.</p>
+                </div>
+
+                <label class="toggle-control" for="autoDeleteToggle">
+                    <span class="sr-only" data-i18n="settings_auto_delete_toggle">Enable automatic cleanup for unbookmarked local threads</span>
+                    <input class="setting-toggle" type="checkbox" id="autoDeleteToggle">
+                </label>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-copy-block">
+                    <p class="setting-label" data-i18n="settings_export_buttons_title">Export menu in chat</p>
+                    <p class="setting-note" data-i18n="settings_export_buttons_text">Show or hide the export dropdown menu inside supported AI chat pages.</p>
+                </div>
+
+                <label class="toggle-control" for="exportButtonsToggle">
+                    <span class="sr-only" data-i18n="settings_export_buttons_toggle">Show export button menu in chat pages</span>
+                    <input class="setting-toggle" type="checkbox" id="exportButtonsToggle">
+                </label>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-copy-block">
+                    <p class="setting-label" data-i18n="settings_auto_send_title">Continue conversation helper</p>
+                    <p class="setting-note" data-i18n="settings_auto_send_text">When you continue from the archive, GPTgps can send the prepared context automatically.</p>
+                </div>
+
+                <label class="toggle-control" for="autoSendToggle">
+                    <span class="sr-only" data-i18n="settings_auto_send_toggle">Automatically send context when continuing a conversation</span>
+                    <input class="setting-toggle" type="checkbox" id="autoSendToggle">
+                </label>
+            </div>
+        </div>
+    </section>
+
+    <section class="settings-panel settings-panel-links">
+        <header class="panel-head">
+            <p class="section-kicker" data-i18n="settings_group_links">Links</p>
+            <h2 data-i18n="settings_group_links_title">Project links and source.</h2>
+            <p class="panel-text" data-i18n="settings_group_links_text">
+                Use these links to follow development, report issues, or browse the source code behind GPTgps.
+            </p>
+        </header>
+
+        <div class="link-grid">
+            <a class="link-card" href="https://github.com/MiroMeowCat-dev" target="_blank" rel="noreferrer">
+                <div class="link-card-head">
+                    <img class="profile-avatar" src="../assets/profile-avatar.jpg" alt="MiroMeowCat avatar">
+                    <div class="link-card-copy">
+                        <span class="link-kicker" data-i18n="settings_link_profile_kicker">Profile</span>
+                        <strong data-i18n="settings_link_profile_title">GitHub profile</strong>
+                    </div>
+                </div>
+                <span data-i18n="settings_link_profile_text">Open the maintainer account on GitHub.</span>
+            </a>
+
+            <a class="link-card" href="https://github.com/MiroMeowCat-dev/GPTgps" target="_blank" rel="noreferrer">
+                <span class="link-kicker" data-i18n="settings_link_repo_kicker">Repository</span>
+                <strong data-i18n="settings_link_repo_title">Project repository</strong>
+                <span data-i18n="settings_link_repo_text">View the GPTgps source code, issues, and updates.</span>
+            </a>
+        </div>
+    </section>
+</main>
+
+<script src="../utility.js"></script>
+<script src="js/settings-localization.js"></script>
+<script src="js/page-theme.js"></script>
+<script src="js/settings.js"></script>
+</body>
+</html>

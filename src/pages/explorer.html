@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPTgps 历史归档</title>
+    <link href="https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro-v6@44659d9/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/explorer.css">
+</head>
+<body class="dark">
+<div id="cover"></div>
+
+<main class="archive-shell">
+    <section class="archive-hero">
+        <header class="archive-topbar">
+            <a class="archive-brand" href="prompts.html">
+                <span class="archive-brand-mark">GPTgps</span>
+                <span class="archive-brand-note">history archive</span>
+            </a>
+
+            <div class="archive-actions">
+                <button id="light_dark" class="chrome-button chrome-button-ghost" type="button">
+                    <i class="sun-moon fa-solid fa-sun-bright"></i>
+                    <span id="d_l"></span>
+                </button>
+                <a class="chrome-button chrome-button-ghost" href="settings.html">设置</a>
+                <a class="chrome-button chrome-button-ghost" href="storage.html">导入导出</a>
+                <a class="chrome-button chrome-button-primary" href="resync.html">重新同步</a>
+            </div>
+        </header>
+
+        <div class="archive-copy">
+            <p class="eyebrow">Conversation archive</p>
+            <h1>把旧会话变成可回看的索引，而不是埋在聊天列表里的碎片。</h1>
+            <p class="archive-text">
+                这里保留的是 GPTgps 还值得继续维护的历史能力：
+                搜索线程、继续会话、收藏重要记录、导出本地归档。
+            </p>
+        </div>
+
+        <div class="archive-toolbar">
+            <label class="search-wrap" for="thread-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input id="thread-search" class="search-bar" type="text" placeholder="搜索标题、对话内容、关键片段">
+            </label>
+
+            <div class="view-switch" role="tablist" aria-label="历史筛选">
+                <button id="view-all" class="view-chip is-active" type="button">全部线程</button>
+                <button id="view-bookmarks" class="view-chip" type="button">仅看收藏</button>
+            </div>
+
+            <a class="inline-link" href="faq.html">帮助与说明</a>
+        </div>
+
+        <dl class="archive-stats">
+            <div>
+                <dt>总线程</dt>
+                <dd data-stat="total">0</dd>
+            </div>
+            <div>
+                <dt>当前结果</dt>
+                <dd data-stat="visible">0</dd>
+            </div>
+            <div>
+                <dt>已收藏</dt>
+                <dd data-stat="bookmarked">0</dd>
+            </div>
+            <div>
+                <dt>最近同步</dt>
+                <dd data-stat="latest">尚未记录</dd>
+            </div>
+        </dl>
+    </section>
+
+    <section class="archive-list-section">
+        <div class="section-bar">
+            <div>
+                <p class="section-kicker">线程列表</p>
+                <h2 id="list-title">全部历史线程</h2>
+            </div>
+            <p id="list-summary" class="section-summary">按时间倒序展示本地归档。</p>
+        </div>
+
+        <div id="thread-list" class="thread-list"></div>
+    </section>
+</main>
+
+<template id="thread-card-template">
+    <article class="thread-card">
+        <div class="thread-main">
+            <div class="thread-heading">
+                <button class="icon-button edit-title-button" type="button" aria-label="编辑标题">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+                <h3 class="title-text" contenteditable="inherit"></h3>
+            </div>
+            <p class="subtitle"></p>
+            <div class="thread-meta">
+                <span class="meta-date"></span>
+                <span class="meta-time"></span>
+                <span class="meta-count"></span>
+            </div>
+        </div>
+
+        <div class="thread-controls">
+            <button class="pill-button bookmark" type="button">收藏</button>
+            <button class="pill-button export" type="button">导出</button>
+            <button class="pill-button continue" type="button">继续</button>
+            <button class="pill-button delete" type="button">删除</button>
+        </div>
+    </article>
+</template>
+
+<script src="../utility.js"></script>
+<script src="js/localization.js"></script>
+<script src="js/explorer.js"></script>
+<script src="../content-scripts/utility.js"></script>
+<script src="js/dark_light.js"></script>
+</body>
+</html>

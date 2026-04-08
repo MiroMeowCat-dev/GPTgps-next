@@ -1,0 +1,308 @@
+let myAuth;let threads; let offset = 0;
+async function auth() {
+    async function getAuth() {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        const timeout = setTimeout(() => {
+            controller.abort();
+        }, 5000);
+
+        try {
+            const response = await fetch(
+                "https://chat.openai.com/api/auth/session?stop=true",
+                {
+                    method: "GET",
+                    headers: {
+                        "content-type": "application/json",
+                    },
+                    signal,
+                }
+            );
+
+            clearTimeout(timeout);
+
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.log("Not OK!");
+                window.open("https://chat.openai.com/auth/login", "_blank");
+                return Promise.reject(response);
+            }
+        } catch (error) {
+            console.log(error);
+            window.open("https://chat.openai.com/auth/login", "_blank");
+            return Promise.reject(error);
+        }
+    }
+    getAuth().then(result => {
+        console.log(result)
+        myAuth = result?.accessToken
+        if (myAuth) {
+            chrome.storage.local.set({auth: myAuth})
+            chrome.storage.local.set({signedIn: true})
+        }
+        else {
+            chrome.storage.local.set({signedIn: false})
+        }
+        chrome.storage.local.get({v2_history: false}, function (result){
+            if (result.v2_history !== true){
+                chrome.storage.local.get({awaitingSignIn: false}, function (result){
+                    if (!result.awaitingSignIn) {
+                        chrome.storage.local.get({offset: 0}, function (result){
+                            setTimeout(() => checkOffsetThenResync(result.offset), 15000)
+                        })
+                    }
+                })
+            }
+        })
+        getAccountStatus()
+    })
+}
+auth()
+
+function checkOffsetThenResync(beginningOffset){
+    chrome.storage.local.get({offset: 0}, function (result){
+        if (beginningOffset === result.offset){
+            resyncAll()
+        }
+    })
+}
+
+async function getAccountStatus(){
+    function fetchy() {
+        return fetch(`https://chat.openai.com/backend-api/accounts/check`, {
+            method: "GET",
+            headers: {
+                'content-type': 'application/json',
+                Authorization: myAuth
+            }
+        }).then(response => {
+            if (response.ok) {
+                return response.json()
+            }
+        })
+    }
+    let data = await fetchy()
+    console.log(data)
+    let isPlus = data?.account_plan?.is_paid_subscription_active
+    console.log("Plus USER: "+ isPlus)
+    let plusVal = JSON.stringify(isPlus)
+    document.body.appendChild(document.createElement(`input`)).setAttribute("id", "plusNetwork")
+    document.querySelector("#plusNetwork").setAttribute("type", "hidden")
+    document.querySelector("#plusNetwork").value = plusVal
+}
+
+function getConversations(offset=0, limit=100, authToken=myAuth){
+    return fetch(`https://chat.openai.com/backend-api/conversations?offset=${offset}&limit=${limit}`, {
+        method: "GET",
+        headers: {
+            'content-type': 'application/json',
+            Authorization: authToken
+        }
+    }).then(response => {
+        if (response.ok) {
+            return response.json()
+        }
+        else{
+            return Promise.reject(response);
+        }
+    })
+}
+
+function buildImageOnlyMessagePlaceholder(imageCount=0) {
+    if (Number(imageCount) > 1) {
+        return `[Image-only message: ${imageCount} images]`
+    }
+    return `[Image-only message]`
+}
+
+function normalizeMessageTextValue(value) {
+    if (typeof value === "string") {
+        return value.trim()
+    }
+    if (value && typeof value === "object" && typeof value.value === "string") {
+        return value.value.trim()
+    }
+    return ""
+}
+
+function looksLikeImageMessagePart(part) {
+    if (!part || typeof part !== "object") {
+        return false
+    }
+    let directType = String(part.content_type || part.type || part.mime_type || part.asset_type || "").toLowerCase()
+    if (directType && (directType.includes("image") || directType.includes("asset") || directType.includes("multimodal") || directType.includes("vision"))) {
+        return true
+    }
+    try {
+        let serialized = JSON.stringify(part).toLowerCase()
+        return serialized.includes("image") || serialized.includes("image_url") || serialized.includes("asset_pointer") || serialized.includes("multimodal")
+    }
+    catch (error) {
+        return false
+    }
+}
+
+function extractConversationNodeText(node) {
+    let content = node?.message?.content
+    if (!content || typeof content !== "object") {
+        return ""
+    }
+
+    let parts = Array.isArray(content.parts) ? content.parts : []
+    let textParts = []
+    let imageCount = 0
+    let sawObjectPart = false
+
+    function pushText(value) {
+        let normalized = normalizeMessageTextValue(value)
+        if (normalized) {
+            textParts.push(normalized)
+        }
+    }
+
+    for (let part of parts) {
+        if (typeof part === "string") {
+            pushText(part)
+            continue
+        }
+        if (!part || typeof part !== "object") {
+            continue
+        }
+        sawObjectPart = true
+        pushText(part.text)
+        pushText(part.content)
+        pushText(part.value)
+        pushText(part.caption)
+        if (looksLikeImageMessagePart(part)) {
+            imageCount += 1
+        }
+    }
+
+    if (!parts.length) {
+        pushText(content.text)
+        pushText(content.content)
+        pushText(content.value)
+    }
+
+    if (textParts.length) {
+        return textParts.join("\n").trim()
+    }
+
+    let contentType = String(content.content_type || content.type || "").toLowerCase()
+    if (!imageCount && looksLikeImageMessagePart(content)) {
+        imageCount = 1
+    }
+    if (imageCount > 0 || (sawObjectPart && (contentType.includes("image") || contentType.includes("multimodal") || contentType.includes("vision")))) {
+        return buildImageOnlyMessagePlaceholder(imageCount)
+    }
+
+    return ""
+}
+
+function convoToTree(obj, id) {
+    const messages = obj["mapping"]
+    let firstItem = findTopParent(obj.current_node, messages)
+    let tree = new TreeNode(null)
+    let convo = []
+    function buildTree(node, tree){
+        let messageText = extractConversationNodeText(node)
+        let newTree = new TreeNode(messageText)
+        tree.addLeaf(newTree)
+        if (tree.currentLeafIndex === 0){
+            convo.push(messageText)
+        }
+        for (let each of node.children){
+            buildTree(messages[each], newTree)
+        }
+    }
+    for (let each of firstItem.children){
+        buildTree(messages[each], tree)
+    }
+    const dateOptions = {year: 'numeric', month: 'long', day: 'numeric'};
+    const date = new Date(obj.create_time * 1000).toLocaleDateString("default", dateOptions);
+    const timeOptions = { hour12: true, hour: "numeric", minute: "numeric"};
+    const time = new Date(obj.create_time * 1000).toLocaleTimeString("default", timeOptions);
+    return {branch_state: tree.toJSON(), date: date, unified_id: true, mkdwn: true, convo: convo, time: time, title: obj.title, id: id, favorite: false, create_time: obj.create_time}
+}
+
+function findTopParent(startingNodeId, tree) {
+    let currentNode = tree[startingNodeId];
+    while (currentNode.parent) {
+        currentNode = tree[currentNode.parent];
+    }
+    let baseSystemNode = tree[currentNode.children[0]]
+    return baseSystemNode;
+}
+
+function getConversation(id, authToken=myAuth){
+    return fetch(`https://chat.openai.com/backend-api/conversation/${id}`, {
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            Authorization: authToken,
+        },
+    }).then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+            return Promise.reject(response);
+    })
+}
+
+async function resyncArray(convoIds, existingIds, threads, delayMs=1000, authToken=myAuth, offset=null){
+    for (let convoId of convoIds){
+        if (existingIds.includes(convoId)){
+            let thread = convoToTree(await getConversation(convoId), convoId)
+            let oldThreadIdx = getObjectIndexByID(thread.id, threads)
+            threads[oldThreadIdx] = thread
+        }
+        else {
+            let thread = convoToTree(await getConversation(convoId, authToken), convoId)
+            threads.push(thread)
+        }
+        if (offset !== null){
+            offset += 1
+            console.log("Offset" +offset)
+            chrome.storage.local.set({offset: offset})
+        }
+        chrome.storage.local.set({threads: threads.reverse()})
+        await new Promise(r => setTimeout(r, delayMs)); // basically sleeping for 600 ms to not send a bunch of requests
+    }
+}
+let max = null;
+async function resyncAll(){
+    chrome.storage.local.set({alreadyResyncing: true})
+    console.log("resyncing all")
+    chrome.storage.local.get({threads: []}, async function (result){
+        threads = result.threads
+        let ids = [];
+        for (let thread of threads){
+            ids.push(thread.id)
+        }
+        chrome.storage.local.get({offset: 0}, async function (result) {
+            offset = result.offset - 2 // overlap for safety
+            if (offset < 0){
+                offset = 0
+            }
+            let convoData = await getConversations(offset)
+            max = await convoData.total
+            while (offset !== max) {
+                let allIds = convoData.items.map(convo => convo.id);
+                await resyncArray(allIds, ids, threads, 15000, myAuth, offset)
+                chrome.storage.local.get({offset: 0}, async function (result){
+                    offset = result.offset
+                    convoData = await getConversations(await offset)
+                    max = await convoData.total
+                    await new Promise(r => setTimeout(r, 30000)); // 30s cooldown
+                })
+            }
+            console.log("FINISHED TOTAL RESYNC")
+            chrome.storage.local.set({offset: 0})
+            chrome.storage.local.set({v2_history: true})
+            chrome.storage.local.set({alreadyResyncing: false})
+        })
+    })
+}
+

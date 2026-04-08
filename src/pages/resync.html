@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPTgps 重新同步</title>
+  <link href="https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro-v6@44659d9/css/all.min.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="css/storage.css">
+</head>
+<body class="dark">
+<div id="cover"></div>
+
+<main class="storage-shell">
+  <section class="storage-hero">
+    <header class="storage-topbar">
+      <a class="storage-brand" href="prompts.html">
+        <span class="storage-brand-mark">GPTgps</span>
+        <span class="storage-brand-note">history resync</span>
+      </a>
+
+      <div class="storage-actions">
+        <button id="light_dark" class="chrome-button chrome-button-ghost" type="button">
+          <i class="sun-moon fa-solid fa-sun-bright"></i>
+          <span id="d_l"></span>
+        </button>
+        <a class="chrome-button chrome-button-ghost" href="explorer.html">历史归档</a>
+        <a class="chrome-button chrome-button-ghost" href="storage.html">导入导出</a>
+        <a class="chrome-button chrome-button-ghost" href="settings.html">设置</a>
+      </div>
+    </header>
+
+    <div class="storage-copy">
+      <p class="eyebrow">Resync</p>
+      <h1>重新建立本地历史索引，把旧会话带回 GPTgps 的归档视图。</h1>
+      <p class="storage-text">
+        这页只负责一件事：重建你的本地历史线程。
+        它会重新抓取并整理本地归档数据，用来修复首次安装、缓存丢失或结构升级后历史页为空的问题。
+      </p>
+    </div>
+
+    <dl class="storage-stats">
+      <div>
+        <dt>当前进度</dt>
+        <dd><span id="resync-offset">0</span></dd>
+      </div>
+      <div>
+        <dt>目标总量</dt>
+        <dd><span id="resync-max">-</span></dd>
+      </div>
+      <div id="resync-status" class="d-none">
+        <dt>状态</dt>
+        <dd id="resync-status-text">同步中</dd>
+      </div>
+      <div>
+        <dt>影响范围</dt>
+        <dd>仅更新本地归档</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="storage-grid">
+    <article class="tool-card">
+      <div class="tool-head">
+        <p class="tool-kicker">开始同步</p>
+        <h2>重新扫描历史会话</h2>
+      </div>
+      <p class="tool-copy">
+        点击下方按钮后，GPTgps 会按历史列表逐步重建本地线程。
+        如果当前没有登录 ChatGPT，系统会先引导你登录再继续。
+      </p>
+      <div class="tool-actions">
+        <button id="resync-icon" class="tool-button tool-button-primary" type="button">开始重新同步</button>
+      </div>
+    </article>
+
+    <article class="tool-card">
+      <div class="tool-head">
+        <p class="tool-kicker">建议</p>
+        <h2>开始前先确认这几点</h2>
+      </div>
+      <p class="tool-copy">同步过程可能会持续一段时间，具体取决于你的历史数量。完成后可以回到“历史归档”页检查线程是否已经恢复。</p>
+      <p class="tool-copy">如果你刚导入过备份，也可以先打开历史页确认是否已经满足需求，不一定每次都要全量重新同步。</p>
+    </article>
+
+    <article class="tool-card">
+      <div class="tool-head">
+        <p class="tool-kicker">完成后</p>
+        <h2>去哪里检查结果</h2>
+      </div>
+      <p class="tool-copy">同步成功后，建议直接打开历史归档页，查看最新线程数、收藏项和可继续会话记录是否都已经恢复。</p>
+      <div class="tool-actions">
+        <a class="tool-button" href="explorer.html">打开历史归档</a>
+      </div>
+    </article>
+  </section>
+</main>
+
+<script src="../utility.js"></script>
+<script src="js/localization.js"></script>
+<script src="js/dark_light.js"></script>
+<script src="../content-scripts/historyv2.js"></script>
+<script src="js/resync-animate.js"></script>
+</body>
+</html>

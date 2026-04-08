@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPTgps 线程详情</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link href="https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro-v6@44659d9/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/thread.css">
+    <link rel="stylesheet" href="css/hljs.css">
+</head>
+<body class="dark">
+<div id="cover"></div>
+
+<main class="thread-shell">
+    <section class="thread-hero">
+        <header class="thread-topbar">
+            <a class="thread-brand" href="prompts.html">
+                <span class="thread-brand-mark">GPTgps</span>
+                <span class="thread-brand-note">thread detail</span>
+            </a>
+
+            <div class="thread-actions">
+                <button id="continue" class="chrome-button chrome-button-primary" type="button">
+                    <i class="fa-regular fa-circle-play"></i>
+                    <span id="cont-text">继续会话</span>
+                </button>
+                <button id="light_dark" class="chrome-button chrome-button-ghost" type="button">
+                    <i class="sun-moon fa-solid fa-sun-bright"></i>
+                    <span id="d_l"></span>
+                </button>
+                <a class="chrome-button chrome-button-ghost" href="explorer.html">历史归档</a>
+                <a class="chrome-button chrome-button-ghost" href="storage.html">导入导出</a>
+                <a class="chrome-button chrome-button-ghost" href="settings.html">设置</a>
+            </div>
+        </header>
+
+        <div class="thread-copy">
+            <p class="eyebrow">Thread detail</p>
+            <h1 id="thread-title">加载线程内容中</h1>
+            <p id="thread-summary" class="thread-text">这里会显示完整会话、分支切换和代码块复制能力。</p>
+        </div>
+
+        <dl class="thread-stats">
+            <div>
+                <dt>消息数量</dt>
+                <dd id="thread-message-count">0</dd>
+            </div>
+            <div>
+                <dt>创建日期</dt>
+                <dd id="thread-date">-</dd>
+            </div>
+            <div>
+                <dt>创建时间</dt>
+                <dd id="thread-time">-</dd>
+            </div>
+            <div>
+                <dt>线程来源</dt>
+                <dd id="thread-source">本地归档</dd>
+            </div>
+        </dl>
+    </section>
+
+    <section class="thread-canvas">
+        <div id="main" class="thread-stream"></div>
+    </section>
+</main>
+
+<template id="human">
+    <article class="turn turn-human">
+        <div class="turn-gutter">
+            <div class="turn-badge">You</div>
+            <div class="branch"></div>
+        </div>
+        <div class="turn-body">
+            <div class="turn-text text"></div>
+        </div>
+    </article>
+</template>
+
+<template id="bot">
+    <article class="turn turn-bot">
+        <div class="turn-gutter">
+            <div class="turn-badge">AI</div>
+            <div class="branch"></div>
+        </div>
+        <div class="turn-body">
+            <div class="turn-text text"></div>
+        </div>
+    </article>
+</template>
+
+<script src="../utility.js"></script>
+<script src="../external-js/showdown.min.js"></script>
+<script src="js/highlightjs.js"></script>
+<script src="js/localization.js"></script>
+<script src="../content-scripts/utility.js"></script>
+<script src="js/thread.js"></script>
+<script src="js/dark_light.js"></script>
+</body>
+</html>
